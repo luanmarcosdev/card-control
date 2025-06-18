@@ -8,25 +8,25 @@ module.exports = {
        name: "Luan Marcos",
        email: "luanmarcosdev@gmail.com",
        password_hash: "",
-       created_at: new Date()
+       createdAt: new Date()
       },
       {
        name: "Maysa Beatriz",
        email: "maysabeatriz@gmail.com",
        password_hash: "",
-       created_at: new Date()
+       createdAt: new Date()
       },
       {
        name: "Lucia Souza",
        email: "luciasouza@gmail.com",
        password_hash: "",
-       created_at: new Date()
+       createdAt: new Date()
       },
       {
        name: "Nivanir José",
        email: "nivanirjose@gmail.com",
        password_hash: "",
-       created_at: new Date()
+       createdAt: new Date()
       },
     ], {});
   },
