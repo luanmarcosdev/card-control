@@ -9,9 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      family_members_id: {
+      entity_id: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: { model: 'entities_migrations', key: 'id' }
       },
       last_four_digits: {
         allowNull: false,
