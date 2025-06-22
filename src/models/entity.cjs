@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'entity_id'
       })
 
-      Entity.belongsTo(models.EntityType, {
+      Entity.belongsTo(models.EntityTypes, {
         foreignKey: 'entity_type_id'
       })
 
@@ -24,11 +24,11 @@ module.exports = (sequelize, DataTypes) => {
   Entity.init({
     user_id: DataTypes.INTEGER,
     name: DataTypes.STRING,
-    entity_types: DataTypes.INTEGER
+    entity_type_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Entity',
-    tableName: 'entientities_migrations'
+    tableName: 'entities_migrations'
   });
   return Entity;
 };

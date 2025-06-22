@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 
     }
   }
-  Cards.init({
+  Card.init({
     family_members_id: DataTypes.INTEGER,
     last_four_digits: DataTypes.STRING,
     due_day: DataTypes.STRING
