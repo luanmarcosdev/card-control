@@ -18,9 +18,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      entity_types: {
+      entity_type_id: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: { model: 'entity_types_migrations', key:'id' }
       },
       createdAt: {
         allowNull: false,

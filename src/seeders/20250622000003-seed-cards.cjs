@@ -5,19 +5,19 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('cards_migrations', [
       {
-        family_members_id: 1,
+        entity_id: 1,
         last_four_digits: "1234",
         due_day: 10,
         createdAt: new Date()
       },
       {
-        family_members_id: 1,
+        entity_id: 2,
         last_four_digits: "2341",
         due_day: 20,
         createdAt: new Date()
       },
       {
-        family_members_id: 1,
+        entity_id: 1,
         last_four_digits: "3412",
         due_day: 30,
         createdAt: new Date()
