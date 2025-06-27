@@ -1,0 +1,26 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Minha API",
+    "description": "Documentação da API usando Swagger",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor local"
+    }
+  ],
+  "paths": {
+    "/clientes": {
+      "get": {
+        "summary": "Retorna todos os clientes",
+        "responses": {
+          "200": {
+            "description": "Lista de clientes"
+          }
+        }
+      }
+    }
+  }
+}
