@@ -1,4 +1,4 @@
-import database from '../models/index.cjs';
+import database from '../database/models/index.cjs';
 
 class UserController {
 

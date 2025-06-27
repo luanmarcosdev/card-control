@@ -22,12 +22,12 @@ fs
     return (
       file.indexOf('.') !== 0 &&
       file !== basename &&
-      (file.slice(-3) === '.js' || file.slice(-4) === '.cjs') && // agora suporta .js e .cjs
+      (file.slice(-3) === '.js' || file.slice(-4) === '.cjs') && 
       file.indexOf('.test.js') === -1
     );
   })
   .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);  // <-- AQUI ESTÁ A CHAVE
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);  
     db[model.name] = model;
   });
 
