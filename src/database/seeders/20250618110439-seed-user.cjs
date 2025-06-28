@@ -7,26 +7,30 @@ module.exports = {
       {
        name: "Luan Marcos",
        email: "luanmarcosdev@gmail.com",
-       password_hash: "",
-       createdAt: new Date()
+       password: "",
+       createdAt: new Date(),
+       updatedAt: new Date()
       },
       {
        name: "Maysa Beatriz",
        email: "maysabeatriz@gmail.com",
-       password_hash: "",
-       createdAt: new Date()
+       password: "",
+       createdAt: new Date(),
+       updatedAt: new Date()
       },
       {
        name: "Lucia Souza",
        email: "luciasouza@gmail.com",
-       password_hash: "",
-       createdAt: new Date()
+       password: "",
+       createdAt: new Date(),
+       updatedAt: new Date()
       },
       {
        name: "Nivanir José",
        email: "nivanirjose@gmail.com",
-       password_hash: "",
-       createdAt: new Date()
+       password: "",
+       createdAt: new Date(),
+       updatedAt: new Date()
       },
     ], {});
   },

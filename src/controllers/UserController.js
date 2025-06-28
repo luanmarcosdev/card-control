@@ -24,10 +24,11 @@ class UserController {
     static async create(req, res) {
         try {
             const jsonUser = req.body;
-            const data = await database.User.create(jsonUser);
+            let data = await database.User.create(jsonUser);
+            const { password, ...safeUser } = data.get();
             return res.status(200).json({
                 message: "Usuário criado com sucesso.",
-                user: data
+                user: safeUser
             });
         } catch (error) {
             console.log(error)

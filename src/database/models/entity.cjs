@@ -11,20 +11,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'user_id'
       })
 
-      Entity.hasMany(models.Card, {
-        foreignKey: 'entity_id'
-      })
-
-      Entity.belongsTo(models.EntityTypes, {
-        foreignKey: 'entity_type_id'
-      })
-
     }
   }
   Entity.init({
     user_id: DataTypes.INTEGER,
     name: DataTypes.STRING,
-    entity_type_id: DataTypes.INTEGER
+    description: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Entity',
