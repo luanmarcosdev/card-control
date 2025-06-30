@@ -12,12 +12,16 @@ module.exports = {
       entity_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'entity_migrations', key: 'id' }
+        references: { model: 'entity_migrations', key: 'id' },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       expense_category_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'expense_categories_migrations', key: 'id' }
+        references: { model: 'expense_categories_migrations', key: 'id' },
+        onDelete: 'RESTRICT',
+        onUpdate: 'CASCADE'
       },
       description: {
         allowNull: true,

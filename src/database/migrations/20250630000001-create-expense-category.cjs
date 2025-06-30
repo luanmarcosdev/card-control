@@ -2,26 +2,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('entities_migrations', {
+    await queryInterface.createTable('expense_categories_migrations', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: { model: 'users_migrations', key: 'id' },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      },
       name: {
         allowNull: false,
-        type: Sequelize.STRING
-      },
-      description: {
-        allowNull: true,
         type: Sequelize.STRING
       },
       createdAt: {
@@ -29,7 +18,7 @@ module.exports = {
         type: Sequelize.DATE
       },
       updatedAt: {
-        allowNull: true,
+        allowNull: false,
         type: Sequelize.DATE
       },
       onDelete: 'CASCADE',
@@ -37,6 +26,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('entities_migrations');
+    await queryInterface.dropTable('expense_categories_migrations');
   }
 };

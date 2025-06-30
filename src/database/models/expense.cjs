@@ -4,13 +4,21 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Expense extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+   
     static associate(models) {
-      // define association here
+      
+      Expense.belongsTo(models.Entity, {
+        foreignKey: 'entity_id',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      })
+
+      Expense.belongsTo(models.ExpenseCategory, {
+        foreignKey: 'expense_category_id',
+        onDelete: 'RESTRICT',
+        onUpdate: 'CASCADE'
+      })
+
     }
   }
   Expense.init({

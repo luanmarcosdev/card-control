@@ -8,7 +8,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       
       Entity.belongsTo(models.User, {
-        foreignKey: 'user_id'
+        foreignKey: 'user_id',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      })
+
+      Entity.hasMany(models.Expense, {
+        foreignKey: 'entity_id',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       })
 
     }
