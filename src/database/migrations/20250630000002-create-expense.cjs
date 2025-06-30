@@ -12,7 +12,7 @@ module.exports = {
       entity_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'entity_migrations', key: 'id' },
+        references: { model: 'entities_migrations', key: 'id' },
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       },

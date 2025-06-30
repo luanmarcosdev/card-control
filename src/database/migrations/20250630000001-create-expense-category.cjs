@@ -20,9 +20,7 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      }
     });
   },
   async down(queryInterface, Sequelize) {
