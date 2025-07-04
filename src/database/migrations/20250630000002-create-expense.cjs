@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('expenses_migrations', {
+    await queryInterface.createTable('expenses', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,14 +12,14 @@ module.exports = {
       entity_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'entities_migrations', key: 'id' },
+        references: { model: 'entities', key: 'id' },
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       },
       expense_category_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'expense_categories_migrations', key: 'id' },
+        references: { model: 'expense_categories', key: 'id' },
         onDelete: 'RESTRICT',
         onUpdate: 'CASCADE'
       },
@@ -46,6 +46,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('expenses_migrations');
+    await queryInterface.dropTable('expenses');
   }
 };

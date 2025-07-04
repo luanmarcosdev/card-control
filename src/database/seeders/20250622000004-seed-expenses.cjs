@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('expenses_migrations', [
+    await queryInterface.bulkInsert('expenses', [
       {
         entity_id: 1,
         expense_category_id: 4,
@@ -54,6 +54,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('expenses_migrations', null, {});
+    await queryInterface.bulkDelete('expenses', null, {});
   }
 };
