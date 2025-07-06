@@ -1,5 +1,5 @@
-import express from 'express';
 import 'dotenv/config';
+import express from 'express';
 import routes from './routes/index.js';
 import fs from 'fs';
 import swaggerUi from 'swagger-ui-express';
