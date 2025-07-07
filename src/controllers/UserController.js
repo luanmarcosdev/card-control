@@ -3,8 +3,12 @@ import database from '../database/models/index.cjs';
 class UserController {
 
     static async getAll(req, res) {
+        console.log('chegou aq')
+        console.log(req.userId)
+        console.log(req.userEmail)
         try {
-            const data = await database.User.findAll();
+            // const data = await database.User.findAll();
+            const data = await database.User.findOne( {where : {id: req.userId}});
             return res.status(200).json(data);
         } catch (error) {
             console.log(error)

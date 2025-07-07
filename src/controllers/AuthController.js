@@ -1,15 +1,16 @@
+import 'dotenv/config';
 import bcrypt from "bcrypt";
 import database from '../database/models/index.cjs';
+import jsonwebtoken from 'jsonwebtoken';
 
 class AuthController {
 
     static async register(req, res) {
 
-        const SALT_ROUNDS = 10;
-
         try {
             const { name, email, password } = req.body;
 
+            const SALT_ROUNDS = 10;
             const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
             const data = await database.User.create({
@@ -29,30 +30,44 @@ class AuthController {
             });
 
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
     static async login(req, res) {
         // TODO
-        const { email, password } = req.body;
+        try {
+            const { email, password } = req.body;
 
-        const user = await database.User.unscoped().findOne({
-            where: { email: email }
-        });
-        
-        if (!user) {
-            return res.status(401).json({ message: 'nenhum usuario encontrado com esse email' });
+            const user = await database.User.unscoped().findOne({
+                where: { email: email }
+            });
+            
+            if (!user) {
+                return res.status(401).json({ message: 'nenhum usuario encontrado com esse email' });
+            }
+
+            const isMatch = await bcrypt.compare(password, user.password);
+
+            if (!isMatch) {
+                return res.status(401).json({ message: 'Senha nao confere' });
+            }
+
+            const jwt = jsonwebtoken.sign(
+                { id: user.id, email: user.email },
+                process.env.JWT_SECRET,
+                { expiresIn: '2h'}
+            );
+
+            // console.log(`User id: ${user.id}`);
+            // console.log(`User email: ${user.email}`);
+            // console.log(`JWT SECRET: ${process.env.JWT_SECRET}`);
+
+            res.json({ token: jwt });
+        } catch (error) {
+            console.log(error);
         }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Senha nao confere' });
-        }
-
-        res.json({ message: 'Login bem-sucedido' });
-
+    
     }
 
 }
