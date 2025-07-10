@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Card Control API",
-    "description": "Documentação da API do Card Control",
+    "title": "Expenses Control",
+    "description": "Documentação da API Expenses Control",
     "version": "1.0.0"
   },
   "servers": [
@@ -14,11 +14,23 @@
   "tags": [
     {
       "name": "auth",
-      "description": "Operações relacionadas à auth de usuários"
+      "description": "Recursos relacionados a autenticação de usuários"
     },
     {
       "name": "user",
-      "description": "Operações relacionadas à dados do usuário"
+      "description": "Recursos relacionados aos dados do usuário"
+    },
+    {
+      "name": "entity",
+      "description": "Recursos relacionados as entidades do usuário"
+    },
+    {
+      "name": "expense",
+      "description": "Recursos relacionados aos gastos do usuário"
+    },
+    {
+      "name": "expenses category",
+      "description": "Recursos relacionados as categorias de gastos"
     }
   ],
   "components": {
@@ -34,7 +46,7 @@
     "/api/auth/register": {
       "post": {
         "tags": ["auth"],
-        "summary": "Registrar um novo usuário",
+        "summary": "Registrar novo usuario",
         "requestBody": {
           "required": true,
           "content": {
@@ -104,10 +116,10 @@
         }
       }
     },
-    "/api/users": {
+    "/api/user": {
       "get": {
         "tags": ["user"],
-        "summary": "Listar todos os usuários",
+        "summary": "Listar dados do usuario autenticado",
         "security": [
           {
             "bearerAuth": []
@@ -119,6 +131,453 @@
           },
           "401": {
             "description": "Token de autenticação ausente ou inválido"
+          }
+        }
+      },
+      "put": {
+        "tags": ["user"],
+        "summary": "Atualizar dados do usuario autenticado",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "password"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        }
+      }
+    },
+    "/api/user/entities": {
+      "get": {
+        "tags": ["entity"],
+        "summary": "Listar todas as entidades",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        }
+      },
+      "post": {
+        "tags": ["entity"],
+        "summary": "Registrar nova entidade",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/entities/{id}": {
+      "get": {
+        "tags": ["entity"],
+        "summary": "Listar entidade informada",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "id da entidade"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        }
+      },
+      "put": {
+        "tags": ["entity"],
+        "summary": "Atualizar entidade informada",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "id da entidade"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["entity"],
+        "summary": "Deletar entidade informada",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "id da entidade"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        }
+      }
+    },
+    "/api/user/expenses": {
+      "get": {
+        "tags": ["expense"],
+        "summary": "Listar todos os gastos do usuario autenticado",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        }
+      }
+    },
+    "/api/user/entities/{id}/expenses": {
+      "get": {
+        "tags": ["expense"],
+        "summary": "Listar todos os gastos da entidade informada",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "id da entidade"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        }
+      },
+      "post": {
+        "tags": ["expense"],
+        "summary": "Registrar novo gasto para a entidade informada",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/entities/{id}/expenses/{expenseId}": {
+      "get": {
+        "tags": ["expense"],
+        "summary": "Listar gasto da entidade informada",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        }
+      },
+      "put": {
+        "tags": ["expense"],
+        "summary": "Atualizar gasto da entidade informada",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["expense"],
+        "summary": "Deletar gasto da entidade informada",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        }
+      }
+
+    },
+    "/api/expenses-categories": {
+      "get": {
+        "tags": ["expenses category"],
+        "summary": "Listar todas as categorias de gastos cadastradas",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        }
+      },
+      "post": {
+        "tags": ["expenses category"],
+        "summary": "Registrar nova categoria de gasto",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/expenses-categories/{id}": {
+      "get": {
+        "tags": ["expenses category"],
+        "summary": "Exibir categoria de gasto informada",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        }
+      },
+      "put": {
+        "tags": ["expenses category"],
+        "summary": "Atualizar categoria de gasto informada",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
           }
         }
       }
