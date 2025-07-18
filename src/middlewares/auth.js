@@ -6,7 +6,6 @@ function authToken(req, res, next) {
 
     if (!authHeader) return res.status(401).json({message: 'Token não fornecido'});
 
-    // 'Bearer seu_token_aqui' 
     const parts = authHeader.split(' ');
 
     if (parts.length !== 2 || parts[0] !== 'Bearer') return res.status(401).json({message: 'Token mal formatado'});
@@ -17,8 +16,6 @@ function authToken(req, res, next) {
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
         req.userId = decoded.id;
         req.userEmail = decoded.email;
-        console.log(`User id auth: ${decoded.id}`);
-        console.log(`User email auth: ${decoded.email}`);;
         next();
     } catch {
         return res.status(401).json({ message: 'Token inválido ou expirado' });

@@ -2,12 +2,8 @@ import database from '../database/models/index.cjs';
 
 class UserController {
 
-    static async getAll(req, res) {
-        console.log('chegou aq')
-        console.log(req.userId)
-        console.log(req.userEmail)
+    static async getAuthUser(req, res) {
         try {
-            // const data = await database.User.findAll();
             const data = await database.User.findOne( {where : {id: req.userId}});
             return res.status(200).json(data);
         } catch (error) {
@@ -15,48 +11,11 @@ class UserController {
         }
     }
 
-    static async find(req, res) {
+    static async updateAuthUser(req, res) {
         try {
-            const id = req.params.id;
-            const data = await database.User.findByPk(id);
-            return res.status(200).json(data);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    static async create(req, res) {
-        try {
-            const jsonUser = req.body;
-            let data = await database.User.create(jsonUser);
-            const { password, ...safeUser } = data.get();
-            return res.status(200).json({
-                message: "Usuário criado com sucesso.",
-                user: safeUser
-            });
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    static async delete(req, res) {
-        try {
-            const id = req.params.id;
-            const deleted = await database.User.destroy({
-                where : {id}
-            });
-            return res.status(200).json({
-                message: "Usuário deletado com sucesso."
-            });
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    static async update(req, res) {
-        try {
-            const id = req.params.id;
+            const id = req.userId;
             const json = req.body;
+
             const data = await database.User.update(
                 {
                     name: json.name
@@ -65,9 +24,16 @@ class UserController {
                     where: { id: id }
                 }
             )
+
+            if (data[0] === 0) {
+                throw new Error('Nao foi possivel atualizar');
+            }
+
+            const updatedUser = await database.User.findOne({ where: {id: id} });
+
             return res.status(200).json({
                 message: "Atualizado com sucesso.",
-                user: data
+                user: updatedUser
             })
         } catch (error) {
             console.log(error)

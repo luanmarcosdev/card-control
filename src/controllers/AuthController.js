@@ -35,7 +35,6 @@ class AuthController {
     }
 
     static async login(req, res) {
-        // TODO
         try {
             const { email, password } = req.body;
 
@@ -58,10 +57,6 @@ class AuthController {
                 process.env.JWT_SECRET,
                 { expiresIn: '2h'}
             );
-
-            // console.log(`User id: ${user.id}`);
-            // console.log(`User email: ${user.email}`);
-            // console.log(`JWT SECRET: ${process.env.JWT_SECRET}`);
 
             res.json({ token: jwt });
         } catch (error) {
