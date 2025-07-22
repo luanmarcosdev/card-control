@@ -14,6 +14,6 @@ router.use('/auth', authRoutes);
 router.use('/user', authToken, userRoutes);
 router.use('/user/entities', authToken, entityRoutes);
 router.use('/user/expenses', authToken, expenseRoutes);
-router.use('/expenses/categories', authToken, expenseCategoryRoutes);
+router.use('/expenses-categories', authToken, expenseCategoryRoutes);
 
 export default router;
