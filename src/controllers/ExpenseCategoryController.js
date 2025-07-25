@@ -1,7 +1,7 @@
 import { where } from 'sequelize';
 import database from '../database/models/index.cjs';
 
-class ExpenseCategory {
+class ExpenseCategoryController {
 
     static async getAll(req, res) {
 
@@ -64,4 +64,4 @@ class ExpenseCategory {
 
 }
 
-export default ExpenseCategory;
+export default ExpenseCategoryController;
