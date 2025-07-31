@@ -1,11 +1,11 @@
 import express from 'express';
-import ExpenseCategory from '../controllers/ExpenseCategory.js'; // mudar controller
+import ExpenseCategoryController from '../controllers/ExpenseCategoryController.js'; 
 
 const router = express.Router();
 
-router.get('/', ExpenseCategory.getAll); // mudar controller
-router.get('/:id', ExpenseCategory.find); // mudar controller
-router.post('/', ExpenseCategory.create); // mudar controller
-router.put('/:id', ExpenseCategory.update); // mudar controller
+router.get('/', ExpenseCategoryController.getAll);
+router.get('/:id', ExpenseCategoryController.find);
+router.post('/', ExpenseCategoryController.create);
+router.put('/:id', ExpenseCategoryController.update);
 
 export default router;
