@@ -13,8 +13,10 @@ async function verifyEntityOwnership(req, res, next) {
         return res.status(403).json({ message: "A entidade não pertence a este usuário"})
     }
 
-    next();
+    req.entityName = entity.name;
+    req.entityId = entity.id;
 
+    next();
 }
 
 export default verifyEntityOwnership;

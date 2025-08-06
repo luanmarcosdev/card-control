@@ -1,5 +1,7 @@
 import express from 'express';
 import EntityController from '../controllers/EntityController.js';
+import EntityExpenseController from '../controllers/EntityExpenseController.js';
+import verifyEntityOwnership from '../middlewares/verifyEntityOwnership.js';
 
 const router = express.Router();
 
@@ -10,11 +12,11 @@ router.post('/', EntityController.create);
 router.put('/:entityid', EntityController.update); 
 router.delete('/:entityid', EntityController.delete);
 
-// // entities expenses
-// router.get('/:entityid/expenses', EntityController.register); // mudar controller
-// router.get('/:entityid/expenses/:expenseId', EntityController.register); // mudar controller
-// router.post('/:entityid/expenses', EntityController.register); // mudar controller
-// router.put('/:entityid/expenses/:expenseId', EntityController.register); // mudar controller
-// router.delete('/:entityid/expenses/:expenseId', EntityController.register); // mudar controller
+// entities expenses
+router.get('/:entityid/expenses', verifyEntityOwnership, EntityExpenseController.getAll);
+router.get('/:entityid/expenses/:expenseId', verifyEntityOwnership, EntityExpenseController.find);
+router.post('/:entityid/expenses', verifyEntityOwnership, EntityExpenseController.create);
+router.put('/:entityid/expenses/:expenseId', verifyEntityOwnership, EntityExpenseController.update);
+router.delete('/:entityid/expenses/:expenseId', verifyEntityOwnership, EntityExpenseController.delete);
 
 export default router;
