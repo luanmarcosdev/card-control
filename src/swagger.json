@@ -389,29 +389,51 @@
       "post": {
         "tags": ["expense"],
         "summary": "Registrar novo gasto para a entidade informada",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "id da entidade"
+          }
+        ],
         "security": [
           {
             "bearerAuth": []
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Gasto cadastrado com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["name", "email", "password"],
+                "required": ["expenseCategoryId", "description", "amount", "date"],
                 "properties": {
-                  "name": {
+                  "expenseCategoryId": {
+                    "type": "integer"
+                  },
+                  "description": {
                     "type": "string"
                   },
-                  "email": {
-                    "type": "string",
-                    "format": "email"
+                  "amount": {
+                    "type": "number",
+                    "format": "double"
                   },
-                  "password": {
+                  "date": {
                     "type": "string",
-                    "format": "password"
+                    "format": "date-time"
                   }
                 }
               }
@@ -424,6 +446,26 @@
       "get": {
         "tags": ["expense"],
         "summary": "Listar gasto da entidade informada",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "id da entidade"
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "id do gasto"
+          }
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -441,6 +483,26 @@
       "put": {
         "tags": ["expense"],
         "summary": "Atualizar gasto da entidade informada",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "id da entidade"
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "id do gasto"
+          }
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -474,6 +536,26 @@
       "delete": {
         "tags": ["expense"],
         "summary": "Deletar gasto da entidade informada",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "id da entidade"
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "id do gasto"
+          }
+        ],
         "security": [
           {
             "bearerAuth": []
