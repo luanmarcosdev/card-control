@@ -508,24 +508,35 @@
             "bearerAuth": []
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Gasto alterado com sucesso"
+          },
+          "401": {
+            "description": "Token de autenticação ausente ou inválido"
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["name", "email", "password"],
+                "required": ["expenseCategoryId", "description", "amount", "date"],
                 "properties": {
-                  "name": {
+                  "expenseCategoryId": {
+                    "type": "integer"
+                  },
+                  "description": {
                     "type": "string"
                   },
-                  "email": {
-                    "type": "string",
-                    "format": "email"
+                  "amount": {
+                    "type": "number",
+                    "format": "double"
                   },
-                  "password": {
+                  "date": {
                     "type": "string",
-                    "format": "password"
+                    "format": "date-time"
                   }
                 }
               }
