@@ -1,8 +1,9 @@
 import database from '../database/models/index.cjs';
+import NotFoundError from '../errors/NotFoundError.js';
 
 class ExpenseController {
 
-    static async getAll(req, res) {
+    static async getAll(req, res, next) {
 
         try {
 
@@ -26,14 +27,13 @@ class ExpenseController {
             );
 
             if (results.length === 0) {
-                return res.status(404).json({ message: "Usuário não possui gastos cadastredos"})
+                throw new NotFoundError("Usuário não possui gastos cadastredos");
             }
 
-            // console.dir(results, {depth: null});
             res.status(200).json(results);
             
         } catch (error) {
-            console.log(error)
+            next(error);
         }
         
     }
