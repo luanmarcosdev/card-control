@@ -1,42 +1,54 @@
 import database from '../database/models/index.cjs';
+import NotFoundError from '../errors/NotFoundError.js';
 
 class UserController {
 
-    static async getAuthUser(req, res) {
+    static async getAuthUser(req, res, next) {
+
         try {
-            const data = await database.User.findOne( {where : {id: req.userId}});
-            return res.status(200).json(data);
+
+            const user = await database.User.findOne( {where : {id: req.userId} });
+
+            if (!user) {
+                throw new NotFoundError("Usuário não encontrado");
+            }
+            
+            return res.status(200).json(user);
+
         } catch (error) {
-            console.log(error)
+            next(error);
         }
+
     }
 
-    static async updateAuthUser(req, res) {
+    static async updateAuthUser(req, res, next) {
+        
         try {
-            const id = req.userId;
-            const json = req.body;
 
-            const data = await database.User.update(
-                {
-                    name: json.name
-                },
-                {
-                    where: { id: id }
-                }
-            )
+            // TODO VALIDAR DADOS DE ENTRADA
+            const { name } = req.body;
 
-            if (data[0] === 0) {
-                throw new Error('Nao foi possivel atualizar');
+            const user = await database.User.findOne({
+                where: {id: req.userId}
+            });
+
+            if (!user) {
+                throw new NotFoundError("Usuário não encontrado");
             }
 
-            const updatedUser = await database.User.findOne({ where: {id: id} });
+            const data = await database.User.update(
+                { name: name },
+                { where: { id: req.userId } }
+            );
 
-            return res.status(200).json({
-                message: "Atualizado com sucesso.",
-                user: updatedUser
-            })
+            if (data[0] === 0) {
+                throw new Error();
+            }
+
+            res.status(200).json({ message: "Usuário atualizado com sucesso" })
+
         } catch (error) {
-            console.log(error)
+            next(error);
         }
     }
 
