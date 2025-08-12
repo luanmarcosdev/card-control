@@ -2,13 +2,16 @@ import 'dotenv/config';
 import bcrypt from "bcrypt";
 import database from '../database/models/index.cjs';
 import jsonwebtoken from 'jsonwebtoken';
+import UnauthorizedError from '../errors/UnauthorizedError.js';
 
 class AuthController {
 
-    static async register(req, res) {
+    static async register(req, res, next) {
 
         try {
+
             const { name, email, password } = req.body;
+            // TODO VALIDAR ENTRADA DOS DADOS
 
             const SALT_ROUNDS = 10;
             const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
@@ -30,26 +33,29 @@ class AuthController {
             });
 
         } catch (error) {
-            console.log(error);
+            next(error);
         }
     }
 
-    static async login(req, res) {
+    static async login(req, res, next) {
+
         try {
+
             const { email, password } = req.body;
+            // TODO VALIDAR ENTRADA DOS DADOS
 
             const user = await database.User.unscoped().findOne({
                 where: { email: email }
             });
             
             if (!user) {
-                return res.status(401).json({ message: 'nenhum usuario encontrado com esse email' });
+                throw new UnauthorizedError("Credenciais inválidas");
             }
 
             const isMatch = await bcrypt.compare(password, user.password);
 
             if (!isMatch) {
-                return res.status(401).json({ message: 'Senha nao confere' });
+                throw new UnauthorizedError("Credenciais inválidas");
             }
 
             const jwt = jsonwebtoken.sign(
@@ -59,8 +65,9 @@ class AuthController {
             );
 
             res.json({ token: jwt });
+            
         } catch (error) {
-            console.log(error);
+            next(error);
         }
     
     }
