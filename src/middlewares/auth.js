@@ -1,14 +1,20 @@
 import 'dotenv/config';
 import jsonwebtoken from 'jsonwebtoken';
+import UnauthorizedError from '../errors/UnauthorizedError.js';
 
 function authToken(req, res, next) {
+
     const authHeader = req.headers.authorization;
 
-    if (!authHeader) return res.status(401).json({message: 'Token não fornecido'});
+    if (!authHeader) {
+        throw new UnauthorizedError('Token não fornecido')
+    }
 
     const parts = authHeader.split(' ');
 
-    if (parts.length !== 2 || parts[0] !== 'Bearer') return res.status(401).json({message: 'Token mal formatado'});
+    if (parts.length !== 2 || parts[0] !== 'Bearer') {
+        throw new UnauthorizedError('Token mal formatado');
+    }
 
     const token = parts[1];
     
@@ -18,7 +24,7 @@ function authToken(req, res, next) {
         req.userEmail = decoded.email;
         next();
     } catch {
-        return res.status(401).json({ message: 'Token inválido ou expirado' });
+        throw new UnauthorizedError('Token inválido ou expirado');
     }
 }
 
