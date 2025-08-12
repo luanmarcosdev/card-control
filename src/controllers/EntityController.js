@@ -1,9 +1,10 @@
 import { where } from 'sequelize';
 import database from '../database/models/index.cjs';
+import NotFoundError from '../errors/NotFoundError.js';
 
 class EntityController {
 
-    static async getAll(req, res) {
+    static async getAll(req, res, next) {
         
         try {
 
@@ -11,23 +12,24 @@ class EntityController {
             const data = await database.Entity.findAll( {where: {user_id: id}} );
 
             if (data.length === 0) {
-                res.status(404).json({"message": "Nenhuma entidade cadastrada para o usuário"});
-                return
+                throw new NotFoundError("Nenhuma entidade cadastrada para o usuário");
             }
 
             res.status(200).json(data);
 
         } catch (error) {
-            console.log(error);
+            next(error);
         }
 
     }
 
-    static async create(req, res) {
+    static async create(req, res, next) {
         
         try {
             
             const { name, description } = req.body;
+            // TO DO VERIFICAR ENTRADA DOS DADOS
+
             const id = req.userId;
 
             const data = await database.Entity.create({
@@ -40,6 +42,7 @@ class EntityController {
                 message: "Entidade criada com sucesso",
                 entity: {
                     user_id: data.user_id,
+                    entity_id: data.id,
                     name: data.name,
                     description: data.description,
                     createdAt: data.createdAt
@@ -47,11 +50,11 @@ class EntityController {
             })
             
         } catch (error) {
-            console.log(error);
+            next(error);
         }
     }
 
-    static async find(req, res) {
+    static async find(req, res, next) {
 
         try {
             
@@ -63,25 +66,41 @@ class EntityController {
             })
 
             if (!data) {
-                res.status(404).json({  message: "Entidade não encontrada." })
+                throw new NotFoundError("Entidade não encontrada")
             }
 
             res.status(200).json(data);
 
-
         } catch (error) {
-            console.log(error);
+            next(error);
         }
 
     }
 
-    static async update(req, res) {
+    static async update(req, res, next) {
 
         try {
-            
-            const { name, description } = req.body;
+                
+            const entityId = req.params.entityid;
 
-            const data = await database.Entity.update(
+            const { name, description } = req.body;
+            // TO DO VALIDAR ENTRADA DOS DADOS
+
+            const entity = await database.Entity.findOne(
+                {
+                    where: 
+                    {
+                        id: entityId,
+                        user_id: req.userId
+                    }
+                }
+            )
+
+            if (!entity) {
+                throw new NotFoundError('Entidade não encontrada')
+            }
+
+            const update = await database.Entity.update(
                 {
                     name: name,
                     description: description
@@ -89,39 +108,25 @@ class EntityController {
                 {
                     where: 
                     {
-                        id: req.params.entityid,
+                        id: entityId,
                         user_id: req.userId
                     }
                 }
             )
 
-            if (data[0] === 0) {
-                throw new Error('Nao foi possivel atualizar');
+            if (update[0] === 0) {
+                throw new Error();
             }
 
-            const updateEntity = await database.Entity.findOne(
-                {
-                    where: 
-                    {
-                        id: req.params.entityid,
-                        user_id: req.userId
-                    }
-                }
-            )
-
-            res.status(200).json({
-                message: "Entidade atualizada com sucesso",
-                data: updateEntity
-            })
-
+            res.status(200).json({ message: "Entidade atualizada com sucesso" })
 
         } catch (error) {   
-            console.log(error);
+            next(error);
         }
 
     }
 
-    static async delete(req, res) {
+    static async delete(req, res, next) {
 
         try {
         
@@ -133,12 +138,14 @@ class EntityController {
                 }
             })
 
-            res.status(200).json({
-                message: "Entidade deletada com sucesso"
-            })
+            if (data === 0) {
+                throw new NotFoundError("Entidade não encontrada");
+            }
+
+            res.status(200).json({ message: "Entidade deletada com sucesso" })
 
         } catch (error) {
-            console.log(error);
+            next(error);
         }
 
     }
