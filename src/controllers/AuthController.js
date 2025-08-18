@@ -64,7 +64,11 @@ class AuthController {
                 { expiresIn: '2h'}
             );
 
-            res.json({ token: jwt });
+            res.status(200).json({
+                accessToken: jwt,
+                tokenType: "Bearer",
+                expiresIn: "7200"
+            });
             
         } catch (error) {
             next(error);

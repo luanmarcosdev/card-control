@@ -2,9 +2,10 @@ import ErrorBase from "../errors/ErrorBase.js";
 
 function errorHandler(err, req, res, next) {
     if (err instanceof ErrorBase) {
-        err.sendResponse(res);
+        err.sendResponse(req, res);
     } else {
-        new ErrorBase().sendResponse(res); 
+        console.error(err);
+        new ErrorBase().sendResponse(req, res); 
     }
 }
 

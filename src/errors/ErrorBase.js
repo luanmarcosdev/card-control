@@ -1,13 +1,17 @@
 class ErrorBase extends Error {
 
     constructor(message = "Erro interno de servidor", status = 500) {
-        super();
+        super(message);
         this.message = message;
         this.status = status;
     }
 
-    sendResponse(res) {
-        res.status(this.status).json({ message: this.message });
+    sendResponse(req, res) {
+        res.status(this.status).json({
+            status: this.status,
+            message: this.message,
+            path: req.originalUrl
+        });
     }
 
 }
