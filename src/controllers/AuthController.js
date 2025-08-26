@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import bcrypt from "bcrypt";
-import database from '../database/models/index.cjs';
+import UserRepository from '../repository/UserRepository.js';
 import jsonwebtoken from 'jsonwebtoken';
 import UnauthorizedError from '../errors/UnauthorizedError.js';
 
@@ -9,29 +9,25 @@ class AuthController {
     static async register(req, res, next) {
 
         try {
-
-            const { name, email, password } = req.body;
             // TODO VALIDAR ENTRADA DOS DADOS
+            const { name, email, password } = req.body;
 
             const SALT_ROUNDS = 10;
             const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-            const data = await database.User.create({
-                name: name,
-                email: email,
-                password: hashedPassword
-            });
+            const data = { name, email, password: hashedPassword };
+
+            const user = await UserRepository.create(data);
             
             return res.status(200).json({
                 message: "Usuário criado com sucesso.",
                 user: {
-                    id: data.id,
-                    name: data.name,
-                    email: data.email,
-                    createdAt: data.createdAt
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    createdAt: user.createdAt
                 }
             });
-
         } catch (error) {
             next(error);
         }
@@ -40,13 +36,10 @@ class AuthController {
     static async login(req, res, next) {
 
         try {
-
-            const { email, password } = req.body;
             // TODO VALIDAR ENTRADA DOS DADOS
+            const { email, password } = req.body;
 
-            const user = await database.User.unscoped().findOne({
-                where: { email: email }
-            });
+            const user = await UserRepository.findOneByEmail(email);
             
             if (!user) {
                 throw new UnauthorizedError("Credenciais inválidas");
@@ -65,9 +58,9 @@ class AuthController {
             );
 
             res.status(200).json({
-                accessToken: jwt,
                 tokenType: "Bearer",
-                expiresIn: "7200"
+                expiresIn: "7200",
+                accessToken: jwt
             });
             
         } catch (error) {
