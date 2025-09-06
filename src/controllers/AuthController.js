@@ -9,7 +9,6 @@ class AuthController {
     static async register(req, res, next) {
 
         try {
-            // TODO VALIDAR ENTRADA DOS DADOS
             const { name, email, password } = req.body;
 
             const SALT_ROUNDS = 10;

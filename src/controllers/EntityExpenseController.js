@@ -1,103 +1,45 @@
-import { where } from 'sequelize';
-import database from '../database/models/index.cjs';
+import ExpenseRepository from '../repository/ExpenseRepository.js';
+import ExpenseCategoryRepository from '../repository/ExpenseCategoryRepository.js';
+import NotFoundError from '../errors/NotFoundError.js';
 
 class EntityExpenseController {
 
-    static async getAll(req, res) {
-        
-        const data = await database.Expense.findAll({
-            where: {
-                entity_id: req.params.entityid,
-            },
-            include: [
-                {
-                    model: database.ExpenseCategory,
-                    attributes: ['name']
-                },
-                {
-                    model: database.Entity,
-                    attributes: ['name']
-                }
-            ]
-        });
-        
-        if(data.length === 0) {
-            res.status(404).json({ message: "Nenhum gasto cadastrado para a entidade" })
-        }
-
-        // formata o sequelize object para retornar o json
-        const formatted = data.map(expense => {
-            const plainExpense = expense.get({ plain: true });
-            plainExpense.category = plainExpense.ExpenseCategory?.name || null;
-            plainExpense.entity = plainExpense.Entity?.name || null;
-            delete plainExpense.ExpenseCategory;
-            delete plainExpense.Entity;
-            return plainExpense;
-        });
-
-        res.status(200).json(formatted);
-    }
-
-    static async find(req, res) {
-
-        const data = await database.Expense.findOne({
-            where: { 
-                id: req.params.expenseId,
-                entity_id: req.params.entityid
-            },
-            include: [
-                {
-                    model: database.ExpenseCategory,
-                    attributes: ['name']
-                },
-                {
-                    model: database.Entity,
-                    attributes: ['name']
-                }
-            ]
-        });
-        
-        if(!data) {
-            res.status(404).json({ message: "Gasto não encontrado ou nao pertence ao usuario" })
-        }
-
-        // formata o sequelize object para retornar o json
-        function formatExpense(expense) {
-            const plain = expense.get({ plain: true });
-            plain.category = plain.ExpenseCategory?.name || null;
-            plain.entity = plain.Entity?.name || null;
-            delete plain.ExpenseCategory;
-            delete plain.Entity;
-            return plain;
-        }
-        
-        const formatted = formatExpense(data);
-      
-        res.status(200).json(formatted);
-
-    }
-
-    static async create(req, res) {
-
+    static async getAll(req, res, next) {
         try {
+            const expenses = await ExpenseRepository.getAllEntityExpenses(req.params.entityid);
+            if(expenses.length === 0) throw new NotFoundError("Nenhum gasto cadastrado para a entidade");
+            res.status(200).json(expenses);
+        } catch (error) {
+            next(error);
+        }
+    }
 
+    static async find(req, res, next) {
+        try {
+            const expense = await ExpenseRepository.find(req.params.expenseId, req.params.entityid);
+            if(!expense) throw new NotFoundError("Gasto não encontrado ou nao pertence ao usuario");
+            res.status(200).json(expense);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async create(req, res, next) {
+        try {
             const { expenseCategoryId, description, amount, date } = req.body;
 
-            const category = await database.ExpenseCategory.findOne({
-                where: {id: expenseCategoryId}
-            })
-
-            if (!category) {
-                return res.status(404).json({ message: "Categoria de gasto não encontrada, verifique e tente novamente" })
-            }
-
-            const data = await database.Expense.create({
+            const category = await ExpenseCategoryRepository.find(expenseCategoryId);
+            if (!category) throw new NotFoundError("Categoria de gasto não encontrada, verifique e tente novamente");
+            
+            const data = {
                 entity_id: req.entityId,
                 expense_category_id: expenseCategoryId,
                 description: description,
                 amount: amount,
                 date: date
-            })
+            };
+
+            const expense = await ExpenseRepository.create(data);
 
             res.status(200).json({
                 message: "Gasto cadastrado com sucesso",
@@ -109,105 +51,55 @@ class EntityExpenseController {
                     date: data.date,
                     createdAt: data.createdAt
                 } 
-            })
-
+            });
         } catch (error) {
-            console.log(error);
+            next(error);
         }
-            
     }
 
-    static async update(req, res) {
-
+    static async update(req, res, next) {
         try {
-
             const { expenseCategoryId, description, amount, date } = req.body;
-            const expenseId = req.params.expenseId;
 
-            const category = await database.ExpenseCategory.findOne({
-                where: {id: expenseCategoryId}
-            })
+            const category = await ExpenseCategoryRepository.find(expenseCategoryId);
 
-            if (!category) {
-                return res.status(400).json({ message: "Não foi possivel atualizar o gasto. Categoria de gasto não encontrada, verifique e tente novamente" })
-            }
+            if (!category) throw new NotFoundError("Categoria de gasto não encontrada, verifique e tente novamente");
 
-            const data = await database.Expense.update(
-                {
-                    expense_category_id: expenseCategoryId,
-                    description: description,
-                    amount: amount,
-                    date: date
-                },
-                {
-                    where: {
-                        id: expenseId,
-                        entity_id: req.entityId
-                    }
-                }
-            )
+            const data = 
+            {
+                expense_category_id: expenseCategoryId,
+                description: description,
+                amount: amount,
+                date: date
+            };
 
-            if (data[0] === 0) {
-                throw new Error('Nao foi possivel atualizar');
-            }
+            const updatedExpense = await ExpenseRepository.update(data, req.params.expenseId, req.entityId)
 
-            const updatedExpense = await database.Expense.findOne({
-                where: { id: expenseId }
-            });
+            if (updatedExpense[0] === 0) throw new NotFoundError("Nenhum gasto encontrado para atualizar");
 
-            res.status(200).json({
-                message: "Gasto da entidade atualizado com sucesso",
-                Expense: {
-                    entity: req.entityName,
-                    caregory: category.name,
-                    description: updatedExpense.description,
-                    amount: updatedExpense.amount,
-                    date: updatedExpense.date,
-                    createdAt: updatedExpense.createdAt
-                }
-            });
-            
+            res.status(200).json({ message: "Gasto da entidade atualizado com sucesso" });
+
         } catch (error) {
-            console.log(error)
+            next(error);
         }
-
     }
 
-    static async delete(req, res) {
-
+    static async delete(req, res, next) {
         try {
-
             const expenseId = req.params.expenseId;
+            const entityId = req.entityId;
 
-            const find = await database.Expense.findOne({
-                where: {
-                    id: expenseId,
-                    entity_id: req.entityId
-                }
-            })
-
-            if (!find) {
-                return res.status(404).json({ message: "Dados inválidos. Verifique e tente novamente"})
-            }
+            const expense = await ExpenseRepository.find(expenseId, entityId);
             
-            const data = await database.Expense.destroy({
-                where: {
-                    id: expenseId,
-                    entity_id: req.entityId
-                }
-            });
+            if (!expense) throw new NotFoundError("Dados inválidos. Verifique e tente novamente");
+            
+            const deletedExpense = await ExpenseRepository.delete(expenseId, entityId);
 
-            if (data === 0) {
-                return res.status(500).json({ message: "Erro ao tentar excluir o gasto. Nenhum registro foi deletado" })
-            }
+            if (deletedExpense === 0) throw new NotFoundError("Nenhum gasto encontrado para deletar");
 
-            return res.status(200).json({
-                message: "Gasto excluido com sucesso",
-                expense_description: find.description
-            })
-
+            return res.status(200).json({ message: "Gasto excluido com sucesso" });
         } catch (error) {
-            console.log(error);
+            next(error);
         }
 
     }

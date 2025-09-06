@@ -36,6 +36,14 @@ class ExpenseRepository {
         return database.Expense.create(data);
     }
 
+    static async update(data, id, entity_id) {
+        return database.Expense.update( data, {  where: { id, entity_id } });
+    }
+
+    static async delete(id, entity_id) {
+        return database.Expense.destroy({ where: { id, entity_id } });
+    }
+
 }
 
 export default ExpenseRepository;
