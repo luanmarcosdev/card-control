@@ -13,7 +13,9 @@ class UserService {
         const user = await UserRepository.findOneByPk(userId);
         if (!user) throw new NotFoundError("Usuário não encontrado");
         await UserRepository.update(userId, name);
-        return;
+        return {
+            message: "Usuário atualizado com sucesso"
+        };
     }
 
 }

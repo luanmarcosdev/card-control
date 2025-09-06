@@ -1,5 +1,3 @@
-import UserRepository from '../repository/UserRepository.js';
-import NotFoundError from '../errors/NotFoundError.js';
 import UserService from '../services/UserService.js';
 
 class UserController {
@@ -7,9 +5,7 @@ class UserController {
     static async getAuthUser(req, res, next) {
         try {
             const userId = req.userId;
-
             const user = await UserService.getAuthUser(userId);
-
             return res.status(200).json(user);
         } catch (error) {
             next(error);
@@ -20,10 +16,8 @@ class UserController {
         try {
             const { name } = req.body;
             const userId = req.userId;
-
-            UserService.updateAuthUser(name, userId);
-
-            res.status(200).json({ message: "Usuário atualizado com sucesso"});
+            const result = await UserService.updateAuthUser(name, userId);
+            res.status(200).json(result);
         } catch (error) {
             next(error);
         }
