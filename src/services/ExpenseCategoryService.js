@@ -27,7 +27,7 @@ class ExpenseCategoryService {
     static async update(categoryData, id) {
         const { name } = categoryData;
         const updatedCategory = await ExpenseCategoryRepository.update(name, id);
-        if (updatedCategory[0] === 0) throw new Error('Não foi possivel atualizar');
+        if (updatedCategory[0] === 0) throw new NotFoundError('Categoria de gasto não encontrada para atualização');
         return { message: "Categoria de gasto atualizada com sucesso" };
     }
 
