@@ -19,6 +19,10 @@ class UserRepository {
         return this.findOneByPk(id);
     }
 
+    static async deleteByEmail(email) {
+        return database.User.destroy({ where: { email } });
+    }
+
 }
 
 export default UserRepository;

@@ -8,6 +8,11 @@ import UnauthorizedError from '../errors/UnauthorizedError.js';
 class AuthService {
 
     static async register(userData) {
+
+        if (!userData.name || !userData.email || !userData.password) {
+            throw new BadRequestError("name, email e password são obrigatórios");
+        }
+
         const { name, email, password } = userData;
 
         const existingUser = await UserRepository.findOneByEmail(email);
@@ -28,6 +33,9 @@ class AuthService {
     }
 
     static async login(userData) {
+        if (!userData.email || !userData.password) {
+            throw new BadRequestError("email e password são obrigatórios");
+        }
         const { email, password } = userData;
 
         const user = await UserRepository.findOneByEmail(email);
