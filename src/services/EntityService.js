@@ -1,15 +1,28 @@
 import EntityRepository from '../repository/EntityRepository.js';
+import UserRepository from '../repository/UserRepository.js';
 import NotFoundError from '../errors/NotFoundError.js';
+import BadRequestError from '../errors/BadRequestError.js';
 
 class EntityService {
 
     static async getAll(userId) {
+        const user = await UserRepository.findOneByPk(userId);
+        if (!user) throw new NotFoundError("Usuário não encontrado");
+
         const entities = await EntityRepository.getAllToAuthUser(userId);
         if (entities.length === 0) throw new NotFoundError("Nenhuma entidade cadastrada para o usuário");
+
         return entities;
     }
 
     static async create(entityData, userId) {
+        if (!entityData.name || !entityData.description) {
+            throw new BadRequestError("nome e descrição são obrigatórios");
+        }
+
+        const user = await UserRepository.findOneByPk(userId);
+        if (!user) throw new NotFoundError("Usuário não encontrado");
+
         const { name, description } = entityData;
 
         const data = {
@@ -33,6 +46,9 @@ class EntityService {
     }
 
     static async find(entityId, userId) {
+        const user = await UserRepository.findOneByPk(userId);
+        if (!user) throw new NotFoundError("Usuário não encontrado");
+        
         const entity = await EntityRepository.findEntityToAuthUser(entityId, userId);
         if (!entity) throw new NotFoundError("Entidade não encontrada")
         return entity;
