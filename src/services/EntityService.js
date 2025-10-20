@@ -5,9 +5,19 @@ import BadRequestError from '../errors/BadRequestError.js';
 
 class EntityService {
 
-    static async getAll(userId) {
+    static async #validatePayload(entityData) {
+        if (!entityData.name || !entityData.description) {
+            throw new BadRequestError("nome e descrição são obrigatórios");
+        }
+    }
+
+    static async #validateUser(userId) {
         const user = await UserRepository.findOneByPk(userId);
         if (!user) throw new NotFoundError("Usuário não encontrado");
+    }
+
+    static async getAll(userId) {
+        await this.#validateUser(userId);
 
         const entities = await EntityRepository.getAllToAuthUser(userId);
         if (entities.length === 0) throw new NotFoundError("Nenhuma entidade cadastrada para o usuário");
@@ -16,12 +26,8 @@ class EntityService {
     }
 
     static async create(entityData, userId) {
-        if (!entityData.name || !entityData.description) {
-            throw new BadRequestError("nome e descrição são obrigatórios");
-        }
-
-        const user = await UserRepository.findOneByPk(userId);
-        if (!user) throw new NotFoundError("Usuário não encontrado");
+        await this.#validatePayload(entityData);
+        await this.#validateUser(userId);
 
         const { name, description } = entityData;
 
@@ -46,8 +52,7 @@ class EntityService {
     }
 
     static async find(entityId, userId) {
-        const user = await UserRepository.findOneByPk(userId);
-        if (!user) throw new NotFoundError("Usuário não encontrado");
+        await this.#validateUser(userId);
         
         const entity = await EntityRepository.findEntityToAuthUser(entityId, userId);
         if (!entity) throw new NotFoundError("Entidade não encontrada")
@@ -55,11 +60,13 @@ class EntityService {
     }
 
     static async update(entityData, entityId, userId) {
-        const { name, description } = entityData;
+        await this.#validatePayload(entityData);
+        await this.#validateUser(userId);
 
         const entity = await EntityRepository.findEntityToAuthUser(entityId, userId);
         if (!entity) throw new NotFoundError('Entidade não encontrada');
 
+        const { name, description } = entityData;
         const data = { name, description };
 
         const updatedEntity = await EntityRepository.updateEntityToAuthUser(data, entityId, userId);
