@@ -14,6 +14,10 @@ class EntityRepository {
         return database.Entity.findOne({ where: { id, user_id } });
     }
 
+    static async find(id) {
+        return database.Entity.findOne({ where: { id } });
+    }
+
     static async updateEntityToAuthUser(data, id, user_id) {
         return database.Entity.update( data, { where: { id, user_id } });
     }
