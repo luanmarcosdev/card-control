@@ -2,6 +2,7 @@ import EntityRepository from '../repository/EntityRepository.js';
 import UserRepository from '../repository/UserRepository.js';
 import NotFoundError from '../errors/NotFoundError.js';
 import BadRequestError from '../errors/BadRequestError.js';
+import ForbiddenError from '../errors/ForbiddenError.js';
 
 class EntityService {
 
@@ -13,7 +14,7 @@ class EntityService {
 
     static async #validateUser(userId) {
         const user = await UserRepository.findOneByPk(userId);
-        if (!user) throw new NotFoundError("Usuário não encontrado");
+        if (!user) throw new ForbiddenError("Usuário não possui permissão, faça o login novamente");
     }
 
     static async getAll(userId) {

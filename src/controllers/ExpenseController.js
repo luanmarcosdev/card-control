@@ -5,7 +5,7 @@ class ExpenseController {
     static async getAll(req, res, next) {
         try {
             const expenses = await ExpenseService.getAll(req.userId);
-            res.status(200).json(expenses);            
+            res.status(200).json(expenses);
         } catch (error) {
             next(error);
         }

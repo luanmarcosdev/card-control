@@ -1,12 +1,26 @@
 import ExpenseRepository from '../repository/ExpenseRepository.js';
+import EntityRepository from '../repository/EntityRepository.js';
+import UserRepository from '../repository/UserRepository.js';
 import ExpenseCategoryRepository from '../repository/ExpenseCategoryRepository.js';
 import NotFoundError from '../errors/NotFoundError.js';
+import ForbiddenError from '../errors/ForbiddenError.js';
 
 class ExpenseService {
 
+    static async #verifyEntityExists(entityId) {
+        const entity = await EntityRepository.find(entityId);
+        if (!entity) throw new NotFoundError("Entidade não encontrada, verifique e tente novamente");
+    }
+
+    static async #verifyUserExists(userId) {
+        const user = await UserRepository.findOneByPk(userId);
+        if (!user) throw new ForbiddenError("Usuário não possui permissão, faça o login novamente");
+    }
+
     static async getAll(userId) {
+        await this.#verifyUserExists(userId);
         const expenses = await ExpenseRepository.getAllExpenses(userId);
-        if (expenses.length === 0) throw new NotFoundError("Usuário não possui gastos cadastredos");
+        if (expenses.length === 0) throw new NotFoundError("Usuário não possui gastos cadastrados");
         return expenses;
     }
 

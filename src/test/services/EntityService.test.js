@@ -15,9 +15,9 @@ describe("Testando a EntityService.getAll", () => {
         await expect(EntityService.getAll(userId)).rejects.toThrow("Nenhuma entidade cadastrada para o usuário");
     });
 
-    it("Deve lançar NotFoundError se o usuário não existir", async () => {
+    it("Deve lançar ForbiddenError se o usuário não existir", async () => {
         const userId = 8888;
-        await expect(EntityService.getAll(userId)).rejects.toThrow("Usuário não encontrado");
+        await expect(EntityService.getAll(userId)).rejects.toThrow("Usuário não possui permissão, faça o login novamente");
     });
 
 });
@@ -42,13 +42,13 @@ describe("Testando a EntityService.create", () => {
         await expect(EntityService.create(entityData, userId)).rejects.toThrow("nome e descrição são obrigatórios");
     });
 
-    it("Deve lançar NotFoundError se o usuário não existir", async () => {
+    it("Deve lançar ForbiddenError se o usuário não existir", async () => {
         const entityData = {
             name: "Entidade Teste",
             description: "Descrição da entidade teste"
         };
         const userId = 9999;
-        await expect(EntityService.create(entityData, userId)).rejects.toThrow("Usuário não encontrado");
+        await expect(EntityService.create(entityData, userId)).rejects.toThrow("Usuário não possui permissão, faça o login novamente");
     });
 
 });
@@ -68,10 +68,10 @@ describe("Testando a EntityService.find", () => {
         await expect(EntityService.find(entityId, userId)).rejects.toThrow("Entidade não encontrada");
     });
 
-    it("Deve lançar NotFoundError se o usuário não existir", async () => {
+    it("Deve lançar ForbiddenError se o usuário não existir", async () => {
         const entityId = 1;
         const userId = 8888;
-        await expect(EntityService.find(entityId, userId)).rejects.toThrow("Usuário não encontrado");
+        await expect(EntityService.find(entityId, userId)).rejects.toThrow("Usuário não possui permissão, faça o login novamente");
     });
 
 });
@@ -93,13 +93,13 @@ describe("Testando a EntityService.update", () => {
         await expect(EntityService.update(entityData, 9999, userId)).rejects.toThrow("Entidade não encontrada");
     });
 
-    it("Deve lançar NotFoundError se o usuário não existir", async () => {
+    it("Deve lançar ForbiddenError se o usuário não existir", async () => {
         const entityData = {
             name: "Entidade Atualizada",
             description: "Descrição da entidade atualizada"
         };
         const userId = 8888;
-        await expect(EntityService.update(entityData, 1, userId)).rejects.toThrow("Usuário não encontrado");
+        await expect(EntityService.update(entityData, 1, userId)).rejects.toThrow("Usuário não possui permissão, faça o login novamente");
     });
 
     it("Deve atualizar a entidade com sucesso", async () => {
