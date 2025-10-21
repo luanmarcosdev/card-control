@@ -22,7 +22,7 @@ class EntityExpenseController {
 
     static async create(req, res, next) {
         try {
-            const expense = await ExpenseService.createEntityExpense(req.body, req.entityId);
+            const expense = await ExpenseService.createEntityExpense(req.body, req.entityId, req.userId);
             return res.status(201).json(expense);
         } catch (error) {
             next(error);
@@ -31,7 +31,7 @@ class EntityExpenseController {
 
     static async update(req, res, next) {
         try {
-            const result = await ExpenseService.updateEntityExpense(req.body, req.params.expenseId, req.entityId);
+            const result = await ExpenseService.updateEntityExpense(req.body, req.params.expenseId, req.entityId, req.userId);
             return res.status(200).json(result);
         } catch (error) {
             next(error);

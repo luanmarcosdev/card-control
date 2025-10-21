@@ -68,41 +68,45 @@ describe('Testando ExpenseService.createEntityExpense', () => {
 
     it('Deve lançar BadRequestError se a entidade não existir', async () => {
         const entityId = 999;
+        const userId = 1;
         const expenseData = {
             expenseCategoryId: 1,
             description: "Teste",
             amount: 111,
             date: "2024-01-01"
         };
-        await expect(ExpenseService.createEntityExpense(expenseData, entityId)).rejects.toThrow("Entidade não encontrada, verifique e tente novamente");
+        await expect(ExpenseService.createEntityExpense(expenseData, entityId, userId)).rejects.toThrow("Entidade não encontrada, verifique e tente novamente");
     });
 
     it('Deve lançar BadRequestError se a categoria de gasto não existir', async () => {
         const entityId = 1;
+        const userId = 1;
         const expenseData = {
             expenseCategoryId: 999,
             description: "Teste",
             amount: 111,
             date: "2024-01-01"
         };
-        await expect(ExpenseService.createEntityExpense(expenseData, entityId)).rejects.toThrow("Categoria de gasto não encontrada, verifique e tente novamente");  
+        await expect(ExpenseService.createEntityExpense(expenseData, entityId, userId)).rejects.toThrow("Categoria de gasto não encontrada, verifique e tente novamente");
     });
 
     it('Deve lançar BadRequestError se os dados estiverem incompletos', async () => {
         const entityId = 1;
+        const userId = 1;
         const expenseData = {};
-        await expect(ExpenseService.createEntityExpense(expenseData, entityId)).rejects.toThrow("expenseCategoryId, description, amount e date são obrigatórios");
+        await expect(ExpenseService.createEntityExpense(expenseData, entityId, userId)).rejects.toThrow("expenseCategoryId, description, amount e date são obrigatórios");
     });
 
     it('Deve criar um gasto com sucesso', async () => {
         const entityId = 1;
+        const userId = 1;
         const expenseData = {
             expenseCategoryId: 1,
             description: "Teste",
             amount: 111,
             date: "2024-01-01"
         };
-        const response = await ExpenseService.createEntityExpense(expenseData, entityId);
+        const response = await ExpenseService.createEntityExpense(expenseData, entityId, userId);
         expenseIdCreated = response.expense.id;
         expect(response).toEqual({ message: "Gasto cadastrado com sucesso", expense: response.expense });
     });
@@ -113,6 +117,7 @@ describe('Testando ExpenseService.updateEntityExpense', () => {
 
     it('Deve lançar BadRequestError se a entidade não existir', async () => {
         const entityId = 999;
+        const userId = 1;
         const expenseId = 1;
         const expenseData = {
             expenseCategoryId: 1,
@@ -120,28 +125,31 @@ describe('Testando ExpenseService.updateEntityExpense', () => {
             amount: 111,
             date: "2024-01-01"
         };
-        await expect(ExpenseService.updateEntityExpense(expenseData, expenseId, entityId)).rejects.toThrow("Entidade não encontrada, verifique e tente novamente");
+        await expect(ExpenseService.updateEntityExpense(expenseData, expenseId, entityId, userId)).rejects.toThrow("Entidade não encontrada, verifique e tente novamente");
     });
 
     it('Deve lançar BadRequestError se os dados estiverem incompletos', async () => {
         const entityId = 1;
+        const userId = 1;
         const expenseData = {};
-        await expect(ExpenseService.createEntityExpense(expenseData, entityId)).rejects.toThrow("expenseCategoryId, description, amount e date são obrigatórios");
+        await expect(ExpenseService.createEntityExpense(expenseData, entityId, userId)).rejects.toThrow("expenseCategoryId, description, amount e date são obrigatórios");
     });
 
     it('Deve lançar BadRequestError se a categoria de gasto não existir', async () => {
         const entityId = 1;
+        const userId = 1;
         const expenseData = {
             expenseCategoryId: 999,
             description: "Teste",
             amount: 111,
             date: "2024-01-01"
         };
-        await expect(ExpenseService.createEntityExpense(expenseData, entityId)).rejects.toThrow("Categoria de gasto não encontrada, verifique e tente novamente");  
+        await expect(ExpenseService.createEntityExpense(expenseData, entityId, userId)).rejects.toThrow("Categoria de gasto não encontrada, verifique e tente novamente");
     });
 
     it('Deve lançar BadRequestError se nenhum gasto for encontrado para atualizar', async () => {
         const entityId = 1;
+        const userId = 1;
         const expenseId = 9999;
         const expenseData = {
             expenseCategoryId: 1,
@@ -149,11 +157,12 @@ describe('Testando ExpenseService.updateEntityExpense', () => {
             amount: 111,
             date: "2024-01-01"
         };
-        await expect(ExpenseService.updateEntityExpense(expenseData, expenseId, entityId)).rejects.toThrow("Nenhum gasto encontrado para atualizar");
+        await expect(ExpenseService.updateEntityExpense(expenseData, expenseId, entityId, userId)).rejects.toThrow("Nenhum gasto encontrado para atualizar");
     });
 
     it('Deve atualizar um gasto com sucesso', async () => {
         const entityId = 1;
+        const userId = 1;
         const expenseId = 1;
         const expenseData = {
             expenseCategoryId: 1,
@@ -161,7 +170,7 @@ describe('Testando ExpenseService.updateEntityExpense', () => {
             amount: 399.90,
             date: "2024-02-02"
         };
-        const response = await ExpenseService.updateEntityExpense(expenseData, expenseId, entityId);
+        const response = await ExpenseService.updateEntityExpense(expenseData, expenseId, entityId, userId);
         expect(response).toEqual({ message: "Gasto da entidade atualizado com sucesso"});
     });
 

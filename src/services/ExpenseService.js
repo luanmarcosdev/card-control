@@ -18,8 +18,8 @@ class ExpenseService {
         if (!user) throw new ForbiddenError("Usuário não possui permissão, faça o login novamente");
     }
 
-    static async #verifyExpenseCategoryExists(expenseCategoryId) {
-        const category = await ExpenseCategoryRepository.find(expenseCategoryId);
+    static async #verifyExpenseCategoryExists(expenseCategoryId, userId) {
+        const category = await ExpenseCategoryRepository.find(expenseCategoryId, userId);
         if (!category) throw new BadRequestError("Categoria de gasto não encontrada, verifique e tente novamente");
     }
 
@@ -44,7 +44,7 @@ class ExpenseService {
         return expenses;
     }
 
-    static async createEntityExpense(expenseData, entityId) {
+    static async createEntityExpense(expenseData, entityId, userId) {
         await this.#verifyEntityExists(entityId);
 
         if (expenseData.expenseCategoryId === undefined || expenseData.description === undefined ||
@@ -54,7 +54,7 @@ class ExpenseService {
 
         const { expenseCategoryId, description, amount, date } = expenseData;
 
-        await this.#verifyExpenseCategoryExists(expenseCategoryId);
+        await this.#verifyExpenseCategoryExists(expenseCategoryId, userId);
         
         const data = {
             entity_id: entityId,
@@ -71,7 +71,7 @@ class ExpenseService {
         };
     }
 
-    static async updateEntityExpense(expenseData, expenseId, entityId) {
+    static async updateEntityExpense(expenseData, expenseId, entityId, userId) {
         await this.#verifyEntityExists(entityId);
 
         if (expenseData.expenseCategoryId === undefined || expenseData.description === undefined ||
@@ -81,7 +81,7 @@ class ExpenseService {
 
         const { expenseCategoryId, description, amount, date } = expenseData;
 
-        await this.#verifyExpenseCategoryExists(expenseCategoryId);
+        await this.#verifyExpenseCategoryExists(expenseCategoryId, userId);
 
         const data = 
         {
