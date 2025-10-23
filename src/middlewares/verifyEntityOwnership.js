@@ -10,7 +10,12 @@ async function verifyEntityOwnership(req, res, next) {
     })
 
     if (!entity) {
-        return res.status(403).json({ message: "A entidade não pertence a este usuário"})
+        return res.status(403).json({
+            status: 403,
+            message: "Acesso negado à entidade",
+            method: req.method,
+            path: req.originalUrl,
+        });
     }
 
     req.entityName = entity.name;

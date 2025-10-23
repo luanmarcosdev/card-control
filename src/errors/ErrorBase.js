@@ -10,6 +10,7 @@ class ErrorBase extends Error {
         res.status(this.status).json({
             status: this.status,
             message: this.message,
+            method: req.method,
             path: req.originalUrl
         });
     }
