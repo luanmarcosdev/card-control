@@ -26,10 +26,19 @@ describe('Testando a UserService.updateAuthUser', () => {
 
   it('Deve atualizar os dados do usuário autenticado', async () => {
     const userId = 14;
-    const newName = 'Nome Atualizado';
-    
-    const response = await UserService.updateAuthUser(newName, userId);
+    const body = {
+      name: 'Nome Atualizado'
+    };
+
+    const response = await UserService.updateAuthUser(body, userId);
     await expect(response).toHaveProperty('message', 'Usuário atualizado com sucesso');
+  });
+
+  it("Deve lançar BadRequestError se o campo 'name' não for fornecido", async () => {
+    const userId = 1;
+    const invalidBody = {};
+
+    await expect(UserService.updateAuthUser(invalidBody, userId)).rejects.toThrow("O campo 'name' é obrigatório");
   });
 
 });

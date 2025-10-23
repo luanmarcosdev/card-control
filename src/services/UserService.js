@@ -1,5 +1,6 @@
 import UserRepository from '../repository/UserRepository.js';
 import NotFoundError from '../errors/NotFoundError.js';
+import BadRequestError from '../errors/BadRequestError.js';
 
 class UserService {
 
@@ -14,9 +15,16 @@ class UserService {
         return user;
     }
 
-    static async updateAuthUser(name, userId) {
+    static async updateAuthUser(data, userId) {
+        if (!data.name) {
+            throw new BadRequestError("O campo 'name' é obrigatório");
+        }
+
+        const { name } = data;
+
         await this.#validateUser(userId);
         await UserRepository.update(userId, name);
+        
         return {
             message: "Usuário atualizado com sucesso"
         };

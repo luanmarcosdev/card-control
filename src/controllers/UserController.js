@@ -14,9 +14,7 @@ class UserController {
 
     static async updateAuthUser(req, res, next) {
         try {
-            const { name } = req.body;
-            const userId = req.userId;
-            const result = await UserService.updateAuthUser(name, userId);
+            const result = await UserService.updateAuthUser(req.body, req.userId);
             res.status(200).json(result);
         } catch (error) {
             next(error);
