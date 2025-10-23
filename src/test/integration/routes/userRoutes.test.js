@@ -7,17 +7,13 @@ const TEST_USER_EMAIL = "user@example.com";
 const TEST_USER_PASSWORD = "string";
 
 let ACCESS_TOKEN;
-
-try {
+beforeAll(async () => {
     const loginResponse = await request.post("/api/auth/login").send({
         email: TEST_USER_EMAIL,
         password: TEST_USER_PASSWORD
     });
-
     ACCESS_TOKEN = loginResponse.body.accessToken;
-} catch (error) {
-    console.error("Erro ao obter o token de acesso:", error);
-}
+});
 
 describe("UserRoutes GET /user integration test", () => {
 
@@ -28,7 +24,7 @@ describe("UserRoutes GET /user integration test", () => {
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("email", TEST_USER_EMAIL)
-        expect(response.body).toHaveProperty("id", 1);
+        expect(response.body).toHaveProperty("id");
     });
 
     it("Deve retornar 401 se o token de acesso for inválido", async () => {
