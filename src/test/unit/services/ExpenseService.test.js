@@ -1,4 +1,4 @@
-import ExpenseService from '../../services/ExpenseService';
+import ExpenseService from '../../../services/ExpenseService';
 
 let expenseIdCreated;
 

@@ -1,5 +1,5 @@
-import AuthService from '../../services/AuthService';
-import UserRepository from '../../repository/UserRepository';
+import AuthService from '../../../services/AuthService';
+import UserRepository from '../../../repository/UserRepository';
 
 describe('Testando a AuthService.register', () => {
 

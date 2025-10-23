@@ -1,4 +1,4 @@
-import EntityService from "../../services/EntityService";
+import EntityService from "../../../services/EntityService";
 
 let entityIdCreated;
 
