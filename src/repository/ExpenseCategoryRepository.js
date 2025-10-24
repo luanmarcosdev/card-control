@@ -18,6 +18,10 @@ class ExpenseCategoryRepository {
         return database.ExpenseCategory.update({ name }, {  where: { id, user_id } });
     }
 
+    static async delete(id) {
+        return database.ExpenseCategory.destroy({ where: { id } });
+    }
+
 }
 
 export default ExpenseCategoryRepository;
