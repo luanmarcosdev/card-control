@@ -4,7 +4,10 @@ class ExpenseController {
 
     static async getAll(req, res, next) {
         try {
-            const expenses = await ExpenseService.getAll(req.userId);
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            
+            const expenses = await ExpenseService.getAll(req.userId, page, limit);
             res.status(200).json(expenses);
         } catch (error) {
             next(error);

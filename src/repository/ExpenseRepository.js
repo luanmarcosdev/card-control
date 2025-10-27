@@ -2,7 +2,7 @@ import database from '../database/models/index.cjs';
 
 class ExpenseRepository {
 
-    static async getAllExpenses(userId) {
+    static async getAllExpenses(userId, offset, limit) {
         return  database.sequelize.query(`
             SELECT ex.id, 
                 en.name AS entity_name, 
@@ -15,12 +15,29 @@ class ExpenseRepository {
             FROM expenses ex
             JOIN entities en ON ex.entity_id = en.id
             JOIN expense_categories ec ON ec.id = ex.expense_category_id
-            WHERE en.user_id = :userId`, 
+            WHERE en.user_id = :userId
+            ORDER BY ex.date DESC
+            LIMIT :limit OFFSET :offset;
+        `, 
             {
-                replacements: { userId },
+                replacements: { userId, limit, offset },
                 type: database.Sequelize.QueryTypes.SELECT
             }
         );
+    }
+
+    static async getTotalExpensesCount(userId) {
+        const result = await database.sequelize.query(`
+            SELECT COUNT(*) AS total 
+            FROM expenses ex
+            JOIN entities en ON ex.entity_id = en.id
+            WHERE en.user_id = :userId;
+        `, 
+        {
+            replacements: { userId },
+            type: database.Sequelize.QueryTypes.SELECT
+        });
+        return result[0].total;
     }
 
     static async getAllEntityExpenses(entity_id) {

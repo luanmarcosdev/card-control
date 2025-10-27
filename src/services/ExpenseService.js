@@ -23,11 +23,31 @@ class ExpenseService {
         if (!category) throw new BadRequestError("Categoria de gasto não encontrada, verifique e tente novamente");
     }
 
-    static async getAll(userId) {
+    static async getAll(userId, page, limit) {
         await this.#verifyUserExists(userId);
-        const expenses = await ExpenseRepository.getAllExpenses(userId);
+            
+        limit = Math.min(Number(limit) || 20);
+        page  = Number(page) || 1;
+        const offset = (page - 1) * limit;
+        
+        const expenses = await ExpenseRepository.getAllExpenses(userId, offset, limit);
+        
+        const total = await ExpenseRepository.getTotalExpensesCount(userId);
+        const pages = Math.ceil(total / limit);
+
+        const urlNext = page < pages ? `/api/user/expenses?page=${page + 1}&limit=${limit}` : null;
+        const urlPrev = page > 1 ? `/api/user/expenses?page=${page - 1}&limit=${limit}` : null;
+
         if (expenses.length === 0) throw new NotFoundError("Usuário não possui gastos cadastrados");
-        return expenses;
+        return {
+            total: total, 
+            page: page,
+            limit: limit,
+            pages: pages,
+            nextPage: urlNext,
+            previousPage: urlPrev,
+            data: expenses
+        };
     }
 
     static async getAllEntityExpenses(entityId) {
