@@ -37,7 +37,7 @@ A aplicação segue uma arquitetura em camadas, promovendo separação de respon
 ## Instalação
 
 ```bash
-git clone https://github.com/luanmarcosdev/card-control.git
+git clone https://github.com/luanmarcosdev/expenses-control.git
 cd expenses-control
 npm install
 ```
