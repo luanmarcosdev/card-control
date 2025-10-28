@@ -4,42 +4,23 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('entities', [
-      {
-        user_id: 1,
-        name: 'Maysa Beatriz',
-        description: '',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        user_id: 1,
-        name: 'Luan Marcos',
-        description: '',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        user_id: 1,
-        name: 'Biz 100',
-        description: '',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        user_id: 1,
-        name: 'New Fiesta',
-        description: '',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        user_id: 1,
-        name: 'Casa',
-        description: '',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-    ], {});
+  {
+    id: 1,
+    user_id: 1,
+    name: 'Carro',
+    description: '',
+    createdAt: new Date('2025-07-04 17:13:14'),
+    updatedAt: new Date('2025-07-04 17:13:14')
+  },
+  {
+    id: 2,
+    user_id: 1,
+    name: 'Moto',
+    description: '',
+    createdAt: new Date('2025-07-04 17:13:14'),
+    updatedAt: new Date('2025-07-04 17:13:14')
+  }
+], {});
    
   },
 

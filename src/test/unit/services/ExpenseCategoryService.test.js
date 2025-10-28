@@ -1,3 +1,4 @@
+import ExpenseCategoryRepository from "../../../repository/ExpenseCategoryRepository";
 import ExpenseCategoryService from "../../../services/ExpenseCategoryService";
 
 let categoryIdCreated;
@@ -11,7 +12,7 @@ describe("Testando ExpenseCategoryService.getAll", () => {
     });
 
     it("Deve lançar NotFoundError se o usuário não possuir categorias de gasto", async () => {
-        const userId = 10;
+        const userId = 2;
         await expect(ExpenseCategoryService.getAll(userId)).rejects.toThrow("Nenhuma categoria de gasto cadastrada para o usuário");
     });
 
@@ -100,4 +101,8 @@ describe("Testando ExpenseCategoryService.update", () => {
         await expect(ExpenseCategoryService.update(categoryData, categoryIdCreated, userId)).rejects.toThrow("nome é obrigatório");
     });
 
+});
+
+afterAll(async () => {
+    await ExpenseCategoryRepository.delete(categoryIdCreated);
 });

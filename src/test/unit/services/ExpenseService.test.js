@@ -5,14 +5,14 @@ let expenseIdCreated;
 describe('Testando ExpenseService.getAll', () => {
 
     it('Deve lançar NotFoundError quando não houver gastos', async () => {
-        const userId = 1;
+        const userId = 2;
         await expect(ExpenseService.getAll(userId)).rejects.toThrow("Usuário não possui gastos cadastrados");
     });
 
     it('Deve retornar uma lista de gastos', async () => {
-        const userId = 10;
+        const userId = 1;
         const expenses = await ExpenseService.getAll(userId);
-        expect(expenses).toBeInstanceOf(Array);
+        expect(expenses.data).toBeInstanceOf(Array);
     });
 
     it('Deve lançar ForbiddenError se o usuário não existir', async () => {
@@ -25,12 +25,12 @@ describe('Testando ExpenseService.getAll', () => {
 describe('Testando ExpenseService.getAllEntityExpenses', () => {
 
     it('Deve lançar NotFoundError quando não houver gastos para a entidade', async () => {
-        const entityId = 3;
+        const entityId = 2;
         await expect(ExpenseService.getAllEntityExpenses(entityId)).rejects.toThrow("Nenhum gasto cadastrado para a entidade");
     });
 
     it('Deve retornar uma lista de gastos para a entidade', async () => {
-        const entityId = 2;
+        const entityId = 1;
         const expenses = await ExpenseService.getAllEntityExpenses(entityId);
         expect(expenses).toBeInstanceOf(Array);
     });
@@ -51,7 +51,7 @@ describe('Testando ExpenseService.findEntityExpenses', () => {
 
     it('Deve lançar NotFoundError se o gasto não existir ou não pertencer à entidade', async () => {
         const expenseId = 1;
-        const entityId = 20;
+        const entityId = 2;
         await expect(ExpenseService.findEntityExpenses(expenseId, entityId)).rejects.toThrow("Gasto não encontrado ou nao pertence ao usuario");
     });
 

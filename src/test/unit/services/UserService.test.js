@@ -25,7 +25,7 @@ describe('Testando a UserService.updateAuthUser', () => {
   });
 
   it('Deve atualizar os dados do usuário autenticado', async () => {
-    const userId = 14;
+    const userId = 2;
     const body = {
       name: 'Nome Atualizado'
     };

@@ -3,18 +3,23 @@ import app from "../../../server.js";
 
 const request = supertest(app);
 
-const TEST_USER_EMAIL = "user@example.com";
-const TEST_USER_PASSWORD = "string";
 let ACCESS_TOKEN;
 let ENTITY_ID;
 let EXPENSE_ID;
+let ACCESS_TOKEN_USER_TEST_2;
 
 beforeAll(async () => {
     const loginResponse = await request.post("/api/auth/login").send({
-        email: TEST_USER_EMAIL,
-        password: TEST_USER_PASSWORD
+        email: "user@example.com",
+        password: "string"
     });
     ACCESS_TOKEN = loginResponse.body.accessToken;
+
+    const loginResponse2 = await request.post("/api/auth/login").send({
+        email: "user1@example.com",
+        password: "string"
+    });
+    ACCESS_TOKEN_USER_TEST_2 = loginResponse2.body.accessToken;
 });
 
 // Tests de integração para rotas de entidade
@@ -24,7 +29,7 @@ describe("EntityRoutes GET /user/entities 404 integration Tests", () => {
     it("Deve retornar 404 se o usuário não possuir entidades cadastradas", async () => {
         const response = await request
             .get("/api/user/entities")
-            .set("Authorization", `Bearer ${ACCESS_TOKEN}`);
+            .set("Authorization", `Bearer ${ACCESS_TOKEN_USER_TEST_2}`);
 
         expect(response.status).toBe(404);
         expect(response.body).toHaveProperty("status", 404);
@@ -146,7 +151,7 @@ describe("EntityExpenseRoutes GET /user/expenses 404 integration Tests", () => {
     it("Deve retornar 404 se o usuário não possuir gastos cadastrados", async () => {
         const response = await request
             .get("/api/user/expenses")
-            .set("Authorization", `Bearer ${ACCESS_TOKEN}`);
+            .set("Authorization", `Bearer ${ACCESS_TOKEN_USER_TEST_2}`);
 
         expect(response.status).toBe(404);
         expect(response.body).toHaveProperty("status", 404);
@@ -292,8 +297,8 @@ describe("EntityExpenseRoutes GET /user/expenses integration Tests", () => {
             .set("Authorization", `Bearer ${ACCESS_TOKEN}`);
 
         expect(response.status).toBe(200);
-        expect(Array.isArray(response.body)).toBe(true);
-        expect(response.body.length).toBeGreaterThan(0);
+        expect(Array.isArray(response.body.data)).toBe(true);
+        expect(response.body.data.length).toBeGreaterThan(0);
     });
 
 });
