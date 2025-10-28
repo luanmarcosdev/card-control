@@ -2,7 +2,7 @@
 
 ## Descrição
 
-O **Expenses Control** é uma API RESTful desenvolvida em Node.js com Express, destinada ao controle de despesas, permitindo que usuários gerenciem categorias e despesas atribuindo elas a uma entidade, com autenticação via JWT e persistência em banco MySQL. O objetivo é disponibilizar uma API backend robusta e escalável, pronta para produção e projetada para integração eficiente com aplicações web ou mobile.
+O **Expenses Control** é uma API RESTful desenvolvida em Nodejs com Express, destinada ao controle de despesas, permitindo que usuários gerenciem categorias e despesas atribuindo elas a uma entidade, com autenticação via JWT e persistência em banco MySQL. O objetivo é disponibilizar uma API backend robusta e escalável, pronta para produção e projetada para integração eficiente com aplicações web ou mobile.
 
 ## Tecnologias Utilizadas
 
@@ -85,7 +85,11 @@ npm run dev
 npm run test
 ```
 
-Contém testes **unitários** e **de integração** utilizando Jest + Supertest.
+Contém mais de 90% de test coverage em testes **unitários** e **de integração** utilizando Jest + Supertest.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/05a993c7-d591-4420-83a9-145c28a5821c" alt="Tests coverage" width="600"/>
+</p>
 
 ## Autenticação
 
@@ -103,3 +107,7 @@ A documentação completa está disponível via Swagger:
 ```
 http://localhost:3000/api-docs/
 ```
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/42b50aec-e8aa-4da3-8450-7020c12c31f1" alt="Swagger" width="600"/>
+</p>
